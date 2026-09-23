@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escola de Música de Centro do Guilherme - MA</title>
+  <style>
+    :root{
+      --azul:#003399;
+      --azul-escuro:#00246b;
+      --amarelo:#ffcc21;
+      --fundo:#f5f7fb;
+      --branco:#ffffff;
+      --texto:#172033;
+      --muted:#6b7280;
+      --borda:#e5e9f2;
+      --verde:#16a34a;
+      --vermelho:#dc2626;
+      --sombra:0 10px 30px rgba(0,51,153,.08);
+      --raio:18px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      background:var(--fundo);
+      color:var(--texto);
+    }
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+
+    .layout{display:flex;min-height:100vh}
+    .sidebar{
+      width:260px;
+      background:linear-gradient(180deg,var(--azul),#002b80);
+      color:white;
+      position:fixed;
+      inset:0 auto 0 0;
+      z-index:20;
+      padding:22px 16px;
+      display:flex;
+      flex-direction:column;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:11px;
+      padding:4px 8px 24px;
+      border-bottom:1px solid rgba(255,255,255,.14);
+      margin-bottom:18px;
+    }
+    .brand img{
+      width:48px;height:48px;object-fit:contain;
+      background:white;border-radius:12px;padding:3px;
+    }
+    .brand strong{font-size:14px;line-height:1.2}
+    .brand span{display:block;font-size:11px;color:#dbe7ff;margin-top:3px}
+
+    .nav{display:flex;flex-direction:column;gap:7px}
+    .nav button{
+      border:0;background:transparent;color:#dce7ff;
+      padding:13px 14px;border-radius:12px;text-align:left;
+      display:flex;align-items:center;gap:12px;font-weight:600;
+      transition:.2s;
+    }
+    .nav button:hover,.nav button.active{
+      background:rgba(255,255,255,.13);color:#fff;
+    }
+    .nav .icon{width:22px;text-align:center;font-size:18px}
+    .sidebar-footer{
+      margin-top:auto;font-size:11px;color:#cbd9fa;
+      padding:14px 8px 4px;line-height:1.5;
+    }
+
+    .main{margin-left:260px;width:calc(100% - 260px);min-width:0}
+    .topbar{
+      height:76px;background:white;border-bottom:1px solid var(--borda);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 32px;position:sticky;top:0;z-index:10;
+    }
+    .topbar h1{font-size:22px}
+    .topbar p{font-size:13px;color:var(--muted);margin-top:3px}
+    .date-badge{
+      background:#f0f4ff;color:var(--azul);padding:10px 14px;border-radius:10px;
+      font-weight:700;font-size:13px;
+    }
+
+    .content{padding:30px;max-width:1500px;margin:auto}
+    .page{display:none}
+    .page.active{display:block}
+
+    .welcome{
+      background:linear-gradient(120deg,var(--azul),#0b4bb9);
+      color:white;border-radius:var(--raio);padding:27px 30px;
+      display:flex;justify-content:space-between;align-items:center;gap:20px;
+      box-shadow:var(--sombra);margin-bottom:24px;overflow:hidden;position:relative;
+    }
+    .welcome:after{
+      content:"♪";position:absolute;right:35px;top:-20px;
+      font-size:170px;color:rgba(255,255,255,.08);font-weight:900;
+    }
+    .welcome h2{font-size:25px;margin-bottom:7px;position:relative;z-index:1}
+    .welcome p{color:#dbe7ff;position:relative;z-index:1}
+    .welcome .btn{position:relative;z-index:1}
+
+    .btn{
+      border:0;border-radius:11px;padding:11px 16px;font-weight:700;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      transition:.2s;
+    }
+    .btn-primary{background:var(--amarelo);color:#172033}
+    .btn-primary:hover{filter:brightness(.96);transform:translateY(-1px)}
+    .btn-blue{background:var(--azul);color:white}
+    .btn-blue:hover{background:var(--azul-escuro)}
+    .btn-light{background:#eef3ff;color:var(--azul)}
+    .btn-danger{background:#fee2e2;color:#b91c1c}
+    .btn-sm{padding:8px 11px;font-size:12px}
+
+    .stats{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:17px;margin-bottom:25px;
+    }
+    .stat{
+      background:white;border:1px solid var(--borda);border-radius:16px;
+      padding:19px;box-shadow:0 5px 18px rgba(30,50,90,.04);
+    }
+    .stat-top{display:flex;justify-content:space-between;align-items:center}
+    .stat-icon{
+      width:42px;height:42px;border-radius:12px;background:#eef3ff;color:var(--azul);
+      display:grid;place-items:center;font-size:19px;
+    }
+    .stat strong{display:block;font-size:29px;margin-top:13px}
+    .stat span{font-size:12px;color:var(--muted)}
+
+    .grid-2{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
+    .card{
+      background:white;border:1px solid var(--borda);border-radius:16px;
+      box-shadow:0 5px 18px rgba(30,50,90,.04);padding:21px;
+    }
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px}
+    .card-header h3{font-size:16px}
+    .card-header p{font-size:12px;color:var(--muted);margin-top:4px}
+
+    .recent-list{display:flex;flex-direction:column;gap:9px}
+    .recent-item{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:12px 0;border-bottom:1px solid #edf0f5;
+    }
+    .recent-item:last-child{border-bottom:0}
+    .student-mini{display:flex;align-items:center;gap:11px}
+    .avatar{
+      width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+      background:#eaf0ff;color:var(--azul);font-weight:800;font-size:13px;
+    }
+    .student-mini strong{font-size:13px;display:block}
+    .student-mini span{font-size:11px;color:var(--muted)}
+    .tag{
+      display:inline-flex;padding:5px 8px;border-radius:20px;font-size:10px;
+      font-weight:800;background:#fff7d6;color:#856a00;
+    }
+
+    .empty{
+      text-align:center;color:var(--muted);padding:35px 10px;font-size:13px;
+    }
+
+    .page-title{
+      display:flex;justify-content:space-between;align-items:center;
+      margin-bottom:22px;gap:15px;
+    }
+    .page-title h2{font-size:23px}
+    .page-title p{font-size:13px;color:var(--muted);margin-top:5px}
+
+    .form-card{max-width:1000px;margin:auto}
+    .form-section{padding:4px 0 24px;margin-bottom:23px;border-bottom:1px solid var(--borda)}
+    .form-section:last-of-type{border-bottom:0;margin-bottom:0}
+    .form-section h3{font-size:15px;color:var(--azul);margin-bottom:16px}
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+    .field{display:flex;flex-direction:column;gap:7px}
+    .field.full{grid-column:1/-1}
+    label{font-size:12px;font-weight:700;color:#374151}
+    input,select,textarea{
+      width:100%;border:1px solid #dce2ec;border-radius:10px;
+      padding:11px 12px;outline:none;background:#fff;color:var(--texto);
+      transition:.2s;
+    }
+    input:focus,select:focus,textarea:focus{
+      border-color:var(--azul);box-shadow:0 0 0 3px rgba(0,51,153,.08)
+    }
+    textarea{resize:vertical;min-height:90px}
+    .form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:5px}
+
+    .toolbar{
+      background:white;border:1px solid var(--borda);border-radius:14px;
+      padding:14px;display:flex;gap:10px;align-items:center;margin-bottom:16px;
+    }
+    .toolbar input{max-width:360px}
+    .table-card{overflow:hidden;padding:0}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:700px}
+    th,td{text-align:left;padding:14px 17px;border-bottom:1px solid #edf0f5;font-size:13px}
+    th{background:#fafbfe;color:#596275;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+    td strong{font-size:13px}
+    .actions{display:flex;gap:6px}
+
+    /* AULAS */
+    .calendar-card{padding:0;overflow:hidden}
+    .calendar-head{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:18px 20px;border-bottom:1px solid var(--borda);gap:12px
+    }
+    .calendar-head h3{font-size:17px;text-transform:capitalize}
+    .calendar-nav{display:flex;gap:7px}
+    .calendar-nav button{width:36px;height:36px;border:0;border-radius:9px;background:#eef3ff;color:var(--azul);font-weight:800}
+    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+    .weekday{
+      padding:11px 8px;text-align:center;font-size:10px;font-weight:800;
+      text-transform:uppercase;color:#687286;background:#fafbfe;border-bottom:1px solid var(--borda)
+    }
+    .day{
+      min-height:105px;border-right:1px solid #edf0f5;border-bottom:1px solid #edf0f5;
+      padding:8px;cursor:pointer;background:white;transition:.15s
+    }
+    .day:hover{background:#f8faff}
+    .day.muted{background:#fafbfc;color:#b4bbc8}
+    .day.today{background:#f0f5ff}
+    .day-number{
+      width:27px;height:27px;border-radius:50%;display:grid;place-items:center;
+      font-size:12px;font-weight:800;margin-bottom:5px
+    }
+    .day.today .day-number{background:var(--azul);color:white}
+    .lesson{
+      background:#edf3ff;color:var(--azul);border-left:3px solid var(--azul);
+      padding:5px 6px;border-radius:6px;margin-top:4px;font-size:10px;
+      line-height:1.25;overflow:hidden
+    }
+    .lesson strong{display:block;font-size:10px}
+    .lesson span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .no-class{
+      font-size:9px;color:#a1a8b5;margin-top:10px;text-align:center
+    }
+    .schedule-info{
+      background:#fff9dd;border:1px solid #f5e8a8;color:#725d00;
+      padding:11px 13px;border-radius:10px;font-size:12px;margin-bottom:16px
+    }
+    .lessons-list{display:flex;flex-direction:column;gap:9px}
+    .lesson-row{
+      border:1px solid var(--borda);border-radius:11px;padding:12px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px
+    }
+    .lesson-row strong{font-size:13px;display:block}
+    .lesson-row span{font-size:11px;color:var(--muted)}
+    .lesson-row .lesson-time{
+      color:var(--azul);font-weight:800;background:#eef3ff;
+      border-radius:8px;padding:7px 9px;white-space:nowrap
+    }
+    @media(max-width:760px){
+      .calendar-grid{min-width:700px}
+      .calendar-wrap{overflow:auto}
+      .day{min-height:90px}
+    }
+    .material-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+    .material-tab{border:1px solid var(--borda);background:#fff;color:var(--texto);padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700;font-size:12px}
+    .material-tab.active{background:var(--azul);color:#fff;border-color:var(--azul)}
+    .material-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+    .material-summary .mini-stat{background:#fff;border:1px solid var(--borda);border-radius:12px;padding:14px}
+    .material-summary strong{display:block;font-size:24px;color:var(--azul);margin-top:4px}
+    .material-summary span{font-size:11px;color:var(--muted)}
+    .material-list{display:flex;flex-direction:column;gap:10px}
+    .material-row{border:1px solid var(--borda);border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:14px;background:#fff}
+    .material-main{min-width:0}
+    .material-main strong{display:block;font-size:14px;margin-bottom:4px}
+    .material-main span{font-size:11px;color:var(--muted)}
+    .material-badge{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:#eef3ff;color:var(--azul);font-size:10px;font-weight:800;margin-right:6px}
+    .material-actions{display:flex;gap:6px;flex-shrink:0}
+    .material-actions button{border:0;border-radius:8px;padding:8px 10px;cursor:pointer;font-size:11px}
+    .material-empty{text-align:center;padding:30px;color:var(--muted);font-size:13px}
+    @media(max-width:760px){.material-summary{grid-template-columns:1fr}.material-row{align-items:flex-start;flex-direction:column}.material-actions{width:100%}.material-actions button{flex:1}}
+
+    /* Modal de cadastro/visualização: sempre centralizado e dentro da tela */
+    .modal-backdrop{
+      display:none;
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      background:rgba(10,22,50,.48);
+      z-index:99999;
+      overflow:hidden;
+    }
+    .modal-backdrop.show{display:block}
+    .modal{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      background:#fff;
+      width:min(760px, calc(100vw - 32px));
+      max-height:calc(100vh - 32px);
+      overflow-y:auto;
+      box-sizing:border-box;
+      margin:0;
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 25px 70px rgba(0,0,0,.28);
+    }
+    body.modal-open{overflow:hidden}
+    @media(max-width:760px){
+      .modal{
+        width:calc(100vw - 24px);
+        max-height:calc(100vh - 24px);
+        padding:18px;
+        border-radius:14px;
+      }
+    }
+    .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .modal-header h3{font-size:19px}
+    .close{border:0;background:#f1f3f7;width:34px;height:34px;border-radius:50%;font-size:20px}
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .detail{
+      background:#f8faff;border-radius:10px;padding:12px
+    }
+    .detail small{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}
+    .detail strong{font-size:13px}
+    .detail.full{grid-column:1/-1}
+
+    .toast{
+      position:fixed;right:25px;bottom:25px;z-index:100;
+      background:#172033;color:white;padding:13px 17px;border-radius:11px;
+      box-shadow:0 10px 30px rgba(0,0,0,.2);font-size:13px;
+      transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s;
+    }
+    .toast.show{transform:translateY(0);opacity:1}
+
+    .mobile-menu{display:none;border:0;background:#eef3ff;color:var(--azul);border-radius:9px;padding:9px}
+    @media(max-width:1000px){
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .grid-2{grid-template-columns:1fr}
+    }
+    @media(max-width:760px){
+      .sidebar{transform:translateX(-100%);transition:.25s}
+      .sidebar.open{transform:translateX(0)}
+      .main{margin-left:0;width:100%}
+      .topbar{padding:0 17px}
+      .mobile-menu{display:block}
+      .topbar-left{display:flex;align-items:center;gap:10px}
+      .content{padding:18px}
+      .welcome{padding:22px}
+      .welcome h2{font-size:20px}
+      .form-grid{grid-template-columns:1fr}
+      .field.full{grid-column:auto}
+      .detail-grid{grid-template-columns:1fr}
+      .detail.full{grid-column:auto}
+      .date-badge{display:none}
+    }
+    @media(max-width:480px){
+      .stats{grid-template-columns:1fr 1fr;gap:10px}
+      .stat{padding:14px}
+      .stat strong{font-size:24px}
+      .welcome .btn{display:none}
+      .page-title{align-items:flex-start;flex-direction:column}
+      .toolbar{flex-direction:column;align-items:stretch}
+      .toolbar input{max-width:none}
+    }
+  
+    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#eef3ff,#f8fafc)}
+    .login-card{width:100%;max-width:430px;background:#fff;border:1px solid var(--borda);border-radius:22px;box-shadow:0 20px 60px rgba(0,51,153,.12);padding:30px}
+    .login-brand{text-align:center;margin-bottom:24px}
+    .login-brand img{width:82px;height:82px;object-fit:contain;background:#fff;border-radius:18px;padding:5px;border:1px solid var(--borda)}
+    .login-brand h1{font-size:22px;margin-top:14px;color:var(--azul)}
+    .login-brand p{font-size:12px;color:var(--muted);margin-top:5px}
+    .login-card .field{margin-bottom:15px}
+    .login-card .btn{width:100%;margin-top:4px}
+    .login-message{min-height:20px;margin:12px 0 0;font-size:12px;text-align:center;color:var(--vermelho)}
+    .topbar-actions{display:flex;align-items:center;gap:9px}
+    .user-email{font-size:11px;color:var(--muted);max-width:230px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .btn-logout{background:#fff1f2;color:#b91c1c;border:1px solid #fecdd3}
+    .loading-screen{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:100}
+    .loading-box{text-align:center;color:var(--azul);font-weight:700}
+    .spinner{width:34px;height:34px;border:4px solid #dbe7ff;border-top-color:var(--azul);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  
+.student-photo{width:46px;height:46px;border-radius:50%;object-fit:cover;background:#eef3ff}.student-photo-lg{width:92px;height:92px;border-radius:18px;object-fit:cover;background:#eef3ff;border:3px solid #e7ecf7}.file-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}.file-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--borda);border-radius:10px;background:#fafbfe}.file-input-note{font-size:11px;color:var(--muted);margin-top:5px}.student-media{display:flex;align-items:center;gap:14px;padding:12px;border:1px solid var(--borda);border-radius:14px;background:#fafbfe}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-box"><div class="spinner"></div>Carregando sistema...</div>
+</div>
+
+<div class="login-screen" id="loginScreen" style="display:none">
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="logo.png" alt="Logo da Escola de Música">
+      <h1>Acesso administrativo</h1>
+      <p>Escola de Música de Centro do Guilherme - MA</p>
+    </div>
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginEmail">E-mail</label>
+        <input type="email" id="loginEmail" required autocomplete="email" placeholder="seuemail@exemplo.com">
+      </div>
+      <div class="field">
+        <label for="loginPassword">Senha</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="Digite sua senha">
+      </div>
+      <button type="submit" class="btn btn-blue" id="loginButton">Entrar no sistema</button>
+      <div class="login-message" id="loginMessage"></div>
+    </form>
+  </div>
+</div>
+
+<div class="layout" id="appShell" style="display:none">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <img src="logo.png" alt="Logo da Escola de Música">
+      <div>
+        <strong>Escola de Música</strong>
+        <span>Centro do Guilherme - MA</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="active" data-page="dashboard"><span class="icon">⌂</span>Dashboard</button>
+      <button data-page="inscricao"><span class="icon">＋</span>Inscrever Aluno</button>
+      <button data-page="alunos"><span class="icon">♟</span>Alunos</button>
+      <button data-page="aulas"><span class="icon">📅</span>Aulas</button>
+      <button data-page="materiais-escola"><span class="icon">🎒</span>Material da Escola</button>
+      <button data-page="materiais-banda"><span class="icon">🥁</span>Material da Banda Marcial</button>
+    </nav>
+
+    <div class="sidebar-footer">
+      Sistema de gestão acadêmica<br>
+      Escola de Música de Centro do Guilherme (MA)
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu" id="mobileMenu">☰</button>
+        <div>
+          <h1 id="topTitle">Dashboard</h1>
+          <p>Gestão da Escola de Música</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <span class="user-email" id="userEmail"></span>
+        <div class="date-badge" id="today"></div>
+        <button class="btn btn-logout btn-sm" id="logoutButton">Sair</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <section class="page active" id="page-dashboard">
+        <div class="welcome">
+          <div>
+            <h2>Bem-vindo ao sistema! 🎵</h2>
+            <p>Gerencie as inscrições e acompanhe os alunos da escola.</p>
+          </div>
+          <button class="btn btn-primary" onclick="goTo('inscricao')">+ Inscrever aluno</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-top"><span>Alunos cadastrados</span><div class="stat-icon">👥</div></div>
+            <strong id="totalAlunos">0</strong><span>Total de alunos registrados</span>
+          </div>
+          <div class="stat">
+            <div class="stat-top"><span>Alunos ativos</span><div class="stat-icon">✓</div></div>
+            <strong id="alunosAtivos">0</strong><span>Participando das atividades</span>
+          </div>
+          <div class="stat">
+            <div class="stat-top"><span>Instrumentos</span><div class="stat-icon">♫</div></div>
+            <strong id="totalInstrumentos">0</strong><span>Instrumentos cadastrados</span>
+          </div>
+          <div class="stat">
+            <div class="stat-top"><span>Novas inscrições</span><div class="stat-icon">★</div></div>
+            <strong id="novosMes">0</strong><span>Inscrições neste mês</span>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>Inscrições recentes</h3>
+                <p>Últimos alunos cadastrados</p>
+              </div>
+              <button class="btn btn-light btn-sm" onclick="goTo('alunos')">Ver todos</button>
+            </div>
+            <div class="recent-list" id="recentList"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>Instrumentos</h3>
+                <p>Distribuição dos alunos por instrumento</p>
+              </div>
+            </div>
+            <div id="instrumentList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- INSCRIÇÃO -->
+      <section class="page" id="page-inscricao">
+        <div class="page-title">
+          <div>
+            <h2>Inscrição de aluno(a)</h2>
+            <p>Cadastre um novo aluno da Escola de Música.</p>
+          </div>
+        </div>
+
+        <div class="card form-card">
+          <form id="studentForm">
+            <div class="form-section">
+              <h3>👤 Dados do aluno(a)</h3>
+              <div class="form-grid">
+                <div class="field full">
+                  <label for="nome">Nome completo *</label>
+                  <input id="nome" name="nome" required placeholder="Digite o nome completo">
+                </div>
+                <div class="field">
+                  <label for="nascimento">Data de nascimento</label>
+                  <input type="date" id="nascimento" name="nascimento">
+                </div>
+                <div class="field">
+                  <label for="sexo">Sexo</label>
+                  <select id="sexo" name="sexo">
+                    <option value="">Selecione</option>
+                    <option>Feminino</option>
+                    <option>Masculino</option>
+                    <option>Outro</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="telefone">Telefone</label>
+                  <input id="telefone" name="telefone" placeholder="(99) 99999-9999">
+                </div>
+                <div class="field">
+                  <label for="email">E-mail</label>
+                  <input type="email" id="email" name="email" placeholder="aluno@email.com">
+                </div>
+                <div class="field full">
+                  <label for="endereco">Endereço</label>
+                  <input id="endereco" name="endereco" placeholder="Rua, número, bairro">
+                </div>
+                <div class="field"><label for="foto">📷 Foto do aluno</label><input type="file" id="foto" name="foto" accept="image/png,image/jpeg"><div class="file-input-note">JPG ou PNG.</div></div>
+                <div class="field"><label for="documentos">📄 Documentos</label><input type="file" id="documentos" name="documentos" accept="application/pdf" multiple><div class="file-input-note">Um ou mais PDFs.</div></div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3>🎶 Dados musicais</h3>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="instrumento">Instrumento *</label>
+                  <select id="instrumento" name="instrumento" required>
+                    <option value="">Selecione o instrumento</option>
+                    <option>Flauta Doce</option>
+                    <option>Trompete</option>
+                    <option>Trombone</option>
+                    <option>Sax Tenor</option>
+                    <option>Flauta Transversal</option>
+                    <option>Outro</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="nivel">Nível</label>
+                  <select id="nivel" name="nivel">
+                    <option>Iniciante</option>
+                    <option>Intermediário</option>
+                    <option>Avançado</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="professor">Professor(a)</label>
+                  <select id="professor" name="professor">
+                    <option value="">Selecione</option>
+                    <option>Ronaldo Jr.</option>
+                    <option>Francisco Mesquita</option>
+                    <option>Ezequias Gomes</option>
+                    <option>Isaque Sampaio</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="horario">Turma / Horário *</label>
+                  <select id="horario" name="horario" required>
+                    <option value="">Selecione o dia e horário</option>
+                    <optgroup label="Segunda-feira">
+                      <option>Segunda-feira 13:00</option><option>Segunda-feira 14:00</option>
+                      <option>Segunda-feira 15:00</option><option>Segunda-feira 16:00</option>
+                      <option>Segunda-feira 17:00</option>
+                    </optgroup>
+                    <optgroup label="Terça-feira">
+                      <option>Terça-feira 13:00</option><option>Terça-feira 14:00</option>
+                      <option>Terça-feira 15:00</option><option>Terça-feira 16:00</option>
+                      <option>Terça-feira 17:00</option>
+                    </optgroup>
+                    <optgroup label="Quinta-feira">
+                      <option>Quinta-feira 13:00</option><option>Quinta-feira 14:00</option>
+                      <option>Quinta-feira 15:00</option><option>Quinta-feira 16:00</option>
+                      <option>Quinta-feira 17:00</option>
+                    </optgroup>
+                    <optgroup label="Sexta-feira">
+                      <option>Sexta-feira 13:00</option><option>Sexta-feira 14:00</option>
+                      <option>Sexta-feira 15:00</option><option>Sexta-feira 16:00</option>
+                      <option>Sexta-feira 17:00</option>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="field full">
+                  <label for="observacoes">Observações</label>
+                  <textarea id="observacoes" name="observacoes" placeholder="Informações importantes sobre o aluno..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3>👨‍👩‍👧 Responsável</h3>
+              <div class="form-grid">
+                <div class="field full">
+                  <label for="responsavel">Nome do responsável</label>
+                  <input id="responsavel" name="responsavel" placeholder="Nome completo do responsável">
+                </div>
+                <div class="field">
+                  <label for="respTelefone">Telefone do responsável</label>
+                  <input id="respTelefone" name="respTelefone" placeholder="(99) 99999-9999">
+                </div>
+                <div class="field">
+                  <label for="parentesco">Parentesco</label>
+                  <select id="parentesco" name="parentesco">
+                    <option value="">Selecione</option>
+                    <option>Mãe</option>
+                    <option>Pai</option>
+                    <option>Avó/Avô</option>
+                    <option>Tia/Tio</option>
+                    <option>Responsável legal</option>
+                    <option>Outro</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-light" onclick="goTo('dashboard')">Cancelar</button>
+              <button type="submit" class="btn btn-blue">✓ Cadastrar aluno</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ALUNOS -->
+      <section class="page" id="page-alunos">
+        <div class="page-title">
+          <div>
+            <h2>Alunos</h2>
+            <p>Consulte e gerencie os alunos cadastrados.</p>
+          </div>
+          <button class="btn btn-blue" onclick="goTo('inscricao')">+ Novo aluno</button>
+        </div>
+
+        <div class="toolbar">
+          <input id="searchInput" placeholder="🔎 Buscar por nome, instrumento ou professor...">
+          <select id="filterInstrument">
+            <option value="">Todos os instrumentos</option>
+            <option>Flauta Doce</option>
+            <option>Trompete</option>
+            <option>Trombone</option>
+            <option>Sax Tenor</option>
+            <option>Flauta Transversal</option>
+            <option>Outro</option>
+          </select>
+        </div>
+
+        <div class="card table-card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aluno(a)</th>
+                  <th>Instrumento</th>
+                  <th>Nível</th>
+                  <th>Professor(a)</th>
+                  <th>Horário</th>
+                  <th>Cadastro</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- AULAS -->
+      <section class="page" id="page-aulas">
+        <div class="page-title">
+          <div>
+            <h2>Calendário de Aulas</h2>
+            <p>Visualize e registre as aulas da Escola de Música.</p>
+          </div>
+          <button class="btn btn-blue" onclick="openLessonModal()">+ Registrar aula</button>
+        </div>
+
+        <div class="schedule-info">
+          <strong>Horários das turmas:</strong>
+          segunda, terça, quinta e sexta-feira, das 13:00 às 17:00.
+          <strong>Quarta-feira não possui aulas.</strong>
+        </div>
+
+        <div class="card calendar-card">
+          <div class="calendar-head">
+            <div>
+              <h3 id="calendarMonth"></h3>
+              <p style="font-size:11px;color:var(--muted);margin-top:3px">Clique em um dia para registrar uma aula</p>
+            </div>
+            <div class="calendar-nav">
+              <button onclick="changeMonth(-1)">‹</button>
+              <button onclick="goCurrentMonth()">Hoje</button>
+              <button onclick="changeMonth(1)">›</button>
+            </div>
+          </div>
+          <div class="calendar-wrap">
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+          <div class="card-header">
+            <div>
+              <h3>Aulas registradas no mês</h3>
+              <p id="monthLessonCount">0 aula(s)</p>
+            </div>
+          </div>
+          <div class="lessons-list" id="lessonsList"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+      <!-- MATERIAL DA ESCOLA -->
+      <section class="page" id="page-materiais-escola">
+        <div class="page-title">
+          <div><h2>Material da Escola</h2><p>Controle os materiais pertencentes à Escola de Música.</p></div>
+          <button class="btn btn-blue" onclick="openMaterialModal('Escola')">+ Cadastrar material</button>
+        </div>
+        <div class="material-tabs">
+          <button class="material-tab active" onclick="goTo('materiais-escola')">🎒 Material da Escola</button>
+          <button class="material-tab" onclick="goTo('materiais-banda')">🥁 Material da Banda Marcial</button>
+        </div>
+        <div class="material-summary" id="materialSummaryEscola"></div>
+        <div class="toolbar"><input id="materialSearchEscola" placeholder="🔎 Buscar material, categoria ou patrimônio..." oninput="renderMaterials('Escola')"><select id="materialCategoryEscola" onchange="renderMaterials('Escola')"><option value="">Todas as categorias</option><option>Instrumentos</option><option>Equipamentos de áudio</option><option>Acessórios</option><option>Material pedagógico</option><option>Mobiliário</option><option>Uniformes</option><option>Outros</option></select></div>
+        <div class="card"><div class="material-list" id="materialListEscola"></div></div>
+      </section>
+
+      <!-- MATERIAL DA BANDA -->
+      <section class="page" id="page-materiais-banda">
+        <div class="page-title">
+          <div><h2>Material da Banda Marcial</h2><p>Controle os materiais e instrumentos pertencentes à Banda Marcial.</p></div>
+          <button class="btn btn-blue" onclick="openMaterialModal('Banda Marcial')">+ Cadastrar material</button>
+        </div>
+        <div class="material-tabs">
+          <button class="material-tab" onclick="goTo('materiais-escola')">🎒 Material da Escola</button>
+          <button class="material-tab active" onclick="goTo('materiais-banda')">🥁 Material da Banda Marcial</button>
+        </div>
+        <div class="material-summary" id="materialSummaryBanda"></div>
+        <div class="toolbar"><input id="materialSearchBanda" placeholder="🔎 Buscar material, categoria ou patrimônio..." oninput="renderMaterials('Banda Marcial')"><select id="materialCategoryBanda" onchange="renderMaterials('Banda Marcial')"><option value="">Todas as categorias</option><option>Instrumentos</option><option>Equipamentos de áudio</option><option>Acessórios</option><option>Material pedagógico</option><option>Mobiliário</option><option>Uniformes</option><option>Outros</option></select></div>
+        <div class="card"><div class="material-list" id="materialListBanda"></div></div>
+      </section>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Detalhes do aluno</h3>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+    <div class="detail-grid" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const SUPABASE_URL = "https://dltkzpjfkiwqoobekyek.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_DDSctwEbuNw_vS1sFEVAqQ_0Qz4xrcs";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+  let students = [];
+  let lessons = [];
+  let materials = [];
+  let currentUser = null;
+  let calendarDate = new Date();
+  calendarDate.setDate(1);
+
+  const pageTitles = {
+    dashboard: "Dashboard",
+    inscricao: "Inscrever Aluno",
+    alunos: "Alunos",
+    aulas: "Aulas",
+    "materiais-escola": "Material da Escola",
+    "materiais-banda": "Material da Banda Marcial"
+  };
+
+  const scheduleOptions = [
+    "Segunda-feira 13:00","Segunda-feira 14:00","Segunda-feira 15:00","Segunda-feira 16:00","Segunda-feira 17:00",
+    "Terça-feira 13:00","Terça-feira 14:00","Terça-feira 15:00","Terça-feira 16:00","Terça-feira 17:00",
+    "Quinta-feira 13:00","Quinta-feira 14:00","Quinta-feira 15:00","Quinta-feira 16:00","Quinta-feira 17:00",
+    "Sexta-feira 13:00","Sexta-feira 14:00","Sexta-feira 15:00","Sexta-feira 16:00","Sexta-feira 17:00"
+  ];
+
+  function mapStudent(row){
+    return {
+      id: row.id,
+      nome: row.nome_completo,
+      nascimento: row.data_nascimento,
+      sexo: row.sexo || "",
+      telefone: row.telefone || "",
+      email: row.email || "",
+      endereco: row.endereco || "",
+      instrumento: row.instrumento || "",
+      nivel: row.nivel || "",
+      professor: row.professor || "",
+      horario: row.turma_horario || "",
+      turma: row.turma_horario || "",
+      observacoes: row.observacoes || "",
+      responsavel: row.responsavel_nome || "",
+      respTelefone: row.responsavel_telefone || "",
+      parentesco: row.responsavel_parentesco || "",
+      status: row.ativo === false ? "Inativo" : "Ativo",
+      fotoPath: row.foto_path || "",
+      documentos: Array.isArray(row.documentos) ? row.documentos : [],
+      cadastro: row.created_at ? row.created_at.slice(0,10) : ""
+    };
+  }
+
+  function mapLesson(row){
+    return {
+      id: row.id,
+      date: row.data_aula,
+      time: row.horario,
+      alunoId: row.aluno_id,
+      student: row.aluno_nome || "",
+      instrumento: row.instrumento || "",
+      professor: row.professor || "",
+      conteudo: row.conteudo || "",
+      observacoes: row.observacoes || ""
+    };
+  }
+
+  async function loadData(){
+    const [studentsResult, lessonsResult, materialsResult] = await Promise.all([
+      supabaseClient.from("alunos").select("*").order("created_at", {ascending:false}),
+      supabaseClient.from("aulas").select("*").order("data_aula", {ascending:false}).order("horario", {ascending:false}),
+      supabaseClient.from("materiais").select("*").order("created_at", {ascending:false})
+    ]);
+
+    if(studentsResult.error){
+      console.error(studentsResult.error);
+      throw studentsResult.error;
+    }
+    if(lessonsResult.error){
+      console.error(lessonsResult.error);
+      throw lessonsResult.error;
+    }
+    if(materialsResult.error){
+      console.error(materialsResult.error);
+      throw materialsResult.error;
+    }
+
+    students = (studentsResult.data || []).map(mapStudent);
+    lessons = (lessonsResult.data || []).map(mapLesson);
+    materials = materialsResult.data || [];
+  }
+
+  async function startApp(session){
+    currentUser = session?.user || null;
+    if(!currentUser) return showLogin();
+
+    try{
+      await loadData();
+      document.getElementById("loginScreen").style.display = "none";
+      document.getElementById("appShell").style.display = "flex";
+      document.getElementById("loadingScreen").style.display = "none";
+      document.getElementById("userEmail").textContent = currentUser.email || "Usuário";
+      renderDashboard();
+    }catch(error){
+      console.error(error);
+      document.getElementById("loadingScreen").style.display = "none";
+      showLogin("Não foi possível carregar os dados. Verifique a conexão e tente novamente.");
+    }
+  }
+
+  function showLogin(message = ""){
+    currentUser = null;
+    document.getElementById("appShell").style.display = "none";
+    document.getElementById("loginScreen").style.display = "flex";
+    document.getElementById("loadingScreen").style.display = "none";
+    document.getElementById("loginMessage").textContent = message;
+  }
+
+  function scheduleDayOfWeek(schedule){
+    if(!schedule) return null;
+    const day = schedule.split(" ")[0].toLowerCase();
+    return {
+      "segunda-feira":1,
+      "terça-feira":2,
+      "quinta-feira":4,
+      "sexta-feira":5
+    }[day] ?? null;
+  }
+
+  function scheduleTime(schedule){
+    if(!schedule) return "";
+    const match = schedule.match(/(\d{2}:\d{2})$/);
+    return match ? match[1] : "";
+  }
+
+  function initials(name){
+    return name.split(" ").filter(Boolean).slice(0,2).map(p => p[0]).join("").toUpperCase();
+  }
+
+  function formatDate(date){
+    if(!date) return "—";
+    const d = new Date(date + "T00:00:00");
+    return d.toLocaleDateString("pt-BR");
+  }
+
+  function formatPhone(value){
+    const n = value.replace(/\D/g,"").slice(0,11);
+    if(n.length <= 10){
+      return n.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3").replace(/-$/,"");
+    }
+    return n.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3").replace(/-$/,"");
+  }
+
+  function goTo(page){
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById("page-" + page).classList.add("active");
+
+    document.querySelectorAll(".nav button").forEach(b => {
+      b.classList.toggle("active", b.dataset.page === page);
+    });
+
+    document.getElementById("topTitle").textContent = pageTitles[page];
+    document.getElementById("sidebar").classList.remove("open");
+
+    if(page === "dashboard") renderDashboard();
+    if(page === "alunos") renderStudents();
+    if(page === "aulas") renderCalendar();
+    if(page === "materiais-escola") renderMaterials("Escola");
+    if(page === "materiais-banda") renderMaterials("Banda Marcial");
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  document.getElementById("loginForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const button = document.getElementById("loginButton");
+    const message = document.getElementById("loginMessage");
+
+    button.disabled = true;
+    button.textContent = "Entrando...";
+    message.textContent = "";
+
+    const {error} = await supabaseClient.auth.signInWithPassword({email, password});
+    if(error){
+      console.error(error);
+      message.textContent = "E-mail ou senha inválidos.";
+      button.disabled = false;
+      button.textContent = "Entrar no sistema";
+      return;
+    }
+
+    document.getElementById("loginPassword").value = "";
+    button.disabled = false;
+    button.textContent = "Entrar no sistema";
+  });
+
+  document.getElementById("logoutButton").addEventListener("click", async () => {
+    await supabaseClient.auth.signOut();
+  });
+
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if(event === "SIGNED_OUT") showLogin();
+    if(event === "SIGNED_IN" && session) startApp(session);
+  });
+
+  async function initialize(){
+    const {data, error} = await supabaseClient.auth.getSession();
+    if(error){
+      console.error(error);
+      showLogin("Erro ao verificar o acesso. Tente novamente.");
+      return;
+    }
+    if(data.session){
+      await startApp(data.session);
+    }else{
+      showLogin();
+    }
+  }
+
+  document.querySelectorAll(".nav button").forEach(btn => {
+    btn.addEventListener("click", () => goTo(btn.dataset.page));
+  });
+
+  document.getElementById("mobileMenu").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("open");
+  });
+
+  document.getElementById("today").textContent =
+    new Date().toLocaleDateString("pt-BR", {weekday:"long", day:"2-digit", month:"long", year:"numeric"});
+
+  async function uploadStudentFiles(studentId, photoFile, documentFiles){
+    const bucket=supabaseClient.storage.from("alunos-arquivos");let fotoPath=null;const documentos=[];const errors=[];
+    if(photoFile){const ext=(photoFile.name.split(".").pop()||"jpg").toLowerCase();const path=`alunos/${studentId}/foto.${ext}`;const r=await bucket.upload(path,photoFile,{upsert:true,contentType:photoFile.type});if(r.error)errors.push(r.error);else fotoPath=path;}
+    for(const file of documentFiles){const safe=file.name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9._-]/g,"_");const path=`alunos/${studentId}/documentos/${Date.now()}_${safe}`;const r=await bucket.upload(path,file,{upsert:false,contentType:"application/pdf"});if(r.error)errors.push(r.error);else documentos.push({name:file.name,path,size:file.size,type:"application/pdf"});}
+    if(fotoPath||documentos.length){const patch={};if(fotoPath)patch.foto_path=fotoPath;if(documentos.length)patch.documentos=documentos;const u=await supabaseClient.from("alunos").update(patch).eq("id",studentId).select().single();if(u.error)errors.push(u.error);else return {data:u.data,errors};}
+    return {data:null,errors};
+  }
+  async function createSignedUrl(path){if(!path)return null;const {data,error}=await supabaseClient.storage.from("alunos-arquivos").createSignedUrl(path,3600);if(error){console.error(error);return null;}return data?.signedUrl||null;}
+
+  document.getElementById("studentForm").addEventListener("submit", async function(e){
+    e.preventDefault();const data=Object.fromEntries(new FormData(this).entries());const photoFile=document.getElementById("foto")?.files?.[0]||null;const documentFiles=Array.from(document.getElementById("documentos")?.files||[]);const button=this.querySelector('button[type="submit"]');button.disabled=true;button.textContent="Salvando...";
+    const {data:row,error}=await supabaseClient.from("alunos").insert({nome_completo:data.nome,data_nascimento:data.nascimento||null,sexo:data.sexo||null,telefone:data.telefone||null,email:data.email||null,endereco:data.endereco||null,instrumento:data.instrumento||null,nivel:data.nivel||null,professor:data.professor||null,turma_horario:data.horario||null,observacoes:data.observacoes||null,responsavel_nome:data.responsavel||null,responsavel_telefone:data.respTelefone||null,responsavel_parentesco:data.parentesco||null,ativo:true}).select().single();
+    if(error){console.error(error);button.disabled=false;button.textContent="✓ Cadastrar aluno";showToast(error.message||"Não foi possível cadastrar o aluno.");return;}
+    let finalRow=row,warning=false;if(photoFile||documentFiles.length){const up=await uploadStudentFiles(row.id,photoFile,documentFiles);if(up.data)finalRow=up.data;warning=up.errors.length>0;}
+    students.unshift(mapStudent(finalRow));button.disabled=false;button.textContent="✓ Cadastrar aluno";this.reset();goTo("alunos");renderStudents();renderDashboard();showToast(warning?"Aluno cadastrado. Alguns arquivos não foram enviados.":"Aluno cadastrado com sucesso!");
+  });
+
+  ["telefone","respTelefone"].forEach(id => {
+    document.getElementById(id).addEventListener("input", e => {
+      e.target.value = formatPhone(e.target.value);
+    });
+  });
+
+  document.getElementById("searchInput").addEventListener("input", renderStudents);
+  document.getElementById("filterInstrument").addEventListener("change", renderStudents);
+
+  function renderDashboard(){
+    document.getElementById("totalAlunos").textContent = students.length;
+    document.getElementById("alunosAtivos").textContent =
+      students.filter(s => s.status !== "Inativo").length;
+
+    document.getElementById("totalInstrumentos").textContent =
+      new Set(students.map(s => s.instrumento).filter(Boolean)).size;
+
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+    document.getElementById("novosMes").textContent =
+      students.filter(s => {
+        const d = new Date(s.cadastro + "T00:00:00");
+        return d.getMonth() === month && d.getFullYear() === year;
+      }).length;
+
+    const recent = document.getElementById("recentList");
+    if(!students.length){
+      recent.innerHTML = '<div class="empty">Nenhum aluno cadastrado ainda.<br>Comece fazendo uma nova inscrição.</div>';
+    }else{
+      recent.innerHTML = students.slice(0,6).map(s => `
+        <div class="recent-item">
+          <div class="student-mini">
+            <div class="avatar">${initials(s.nome)}</div>
+            <div>
+              <strong>${escapeHtml(s.nome)}</strong>
+              <span>${escapeHtml(s.instrumento || "Instrumento não informado")} • ${escapeHtml(s.horario || "Horário não informado")}</span>
+            </div>
+          </div>
+          <span class="tag">${escapeHtml(s.nivel || "Iniciante")}</span>
+        </div>
+      `).join("");
+    }
+
+    const counts = {};
+    students.forEach(s => {
+      const inst = s.instrumento || "Não informado";
+      counts[inst] = (counts[inst] || 0) + 1;
+    });
+
+    const instruments = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+    const instrumentList = document.getElementById("instrumentList");
+
+    if(!instruments.length){
+      instrumentList.innerHTML = '<div class="empty">Os instrumentos aparecerão aqui após os primeiros cadastros.</div>';
+    }else{
+      const max = Math.max(...instruments.map(x => x[1]));
+      instrumentList.innerHTML = instruments.map(([name,count]) => `
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+            <strong>${escapeHtml(name)}</strong><span style="color:#6b7280">${count} aluno(s)</span>
+          </div>
+          <div style="height:8px;background:#edf1f8;border-radius:20px;overflow:hidden">
+            <div style="height:100%;width:${(count/max)*100}%;background:var(--azul);border-radius:20px"></div>
+          </div>
+        </div>
+      `).join("");
+    }
+  }
+
+  function renderStudents(){
+    const query = document.getElementById("searchInput").value.toLowerCase().trim();
+    const filter = document.getElementById("filterInstrument").value;
+
+    const filtered = students.filter(s => {
+      const text = `${s.nome} ${s.instrumento} ${s.professor} ${s.horario}`.toLowerCase();
+      return (!query || text.includes(query)) && (!filter || s.instrumento === filter);
+    });
+
+    const tbody = document.getElementById("studentsTable");
+
+    if(!filtered.length){
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty">
+        ${students.length ? "Nenhum aluno encontrado para a busca." : "Nenhum aluno cadastrado ainda."}
+      </div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(s => `
+      <tr>
+        <td>
+          <div class="student-mini">
+            <div class="avatar">${initials(s.nome)}</div>
+            <div>
+              <strong>${escapeHtml(s.nome)}</strong>
+              <span style="display:block;color:#6b7280;font-size:11px">${escapeHtml(s.telefone || "Sem telefone")}</span>
+            </div>
+          </div>
+        </td>
+        <td>${escapeHtml(s.instrumento || "—")}</td>
+        <td>${escapeHtml(s.nivel || "—")}</td>
+        <td>${escapeHtml(s.professor || "—")}</td>
+        <td>${escapeHtml(s.horario || s.turma || "—")}</td>
+        <td>${formatDate(s.cadastro)}</td>
+        <td>
+          <div class="actions">
+            <button class="btn btn-light btn-sm" onclick="viewStudent(${s.id})">Ver</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteStudent(${s.id})">Excluir</button>
+          </div>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  async function viewStudent(id){
+    const s=students.find(x=>x.id===id);if(!s)return;const photoUrl=await createSignedUrl(s.fotoPath);let docs='<div class="file-list"><div class="empty">Nenhum documento anexado.</div></div>';
+    if(Array.isArray(s.documentos)&&s.documentos.length){const arr=[];for(const d of s.documentos){const u=await createSignedUrl(d.path);arr.push(`<div class="file-item"><span>📄 ${escapeHtml(d.name||"Documento")}</span>${u?`<a class="btn btn-light btn-sm" href="${u}" target="_blank" rel="noopener">Abrir</a>`:`<span style="color:#dc2626">Indisponível</span>`}</div>`);}docs=`<div class="file-list">${arr.join("")}</div>`;}
+    document.getElementById("modalTitle").textContent=s.nome;document.getElementById("modalBody").innerHTML=`<div class="detail full"><div class="student-media">${photoUrl?`<img class="student-photo-lg" src="${photoUrl}" alt="${escapeHtml(s.nome)}">`:`<div class="avatar" style="width:92px;height:92px;font-size:26px">${initials(s.nome)}</div>`}<div><strong style="font-size:18px">${escapeHtml(s.nome)}</strong><div style="font-size:12px;color:var(--muted)">${escapeHtml(s.instrumento||"Instrumento não informado")} • ${escapeHtml(s.horario||"Horário não informado")}</div></div></div></div><div class="detail"><small>Instrumento</small><strong>${escapeHtml(s.instrumento||"—")}</strong></div><div class="detail"><small>Nível</small><strong>${escapeHtml(s.nivel||"—")}</strong></div><div class="detail"><small>Professor(a)</small><strong>${escapeHtml(s.professor||"—")}</strong></div><div class="detail"><small>Turma / Horário</small><strong>${escapeHtml(s.horario||"—")}</strong></div><div class="detail"><small>Data de nascimento</small><strong>${formatDate(s.nascimento)}</strong></div><div class="detail"><small>Telefone</small><strong>${escapeHtml(s.telefone||"—")}</strong></div><div class="detail"><small>Responsável</small><strong>${escapeHtml(s.responsavel||"—")}</strong></div><div class="detail"><small>Telefone do responsável</small><strong>${escapeHtml(s.respTelefone||"—")}</strong></div><div class="detail"><small>Parentesco</small><strong>${escapeHtml(s.parentesco||"—")}</strong></div><div class="detail"><small>Sexo</small><strong>${escapeHtml(s.sexo||"—")}</strong></div><div class="detail full"><small>Endereço</small><strong>${escapeHtml(s.endereco||"—")}</strong></div><div class="detail full"><small>E-mail</small><strong>${escapeHtml(s.email||"—")}</strong></div><div class="detail full"><small>Observações</small><strong>${escapeHtml(s.observacoes||"—")}</strong></div><div class="detail full"><small>📄 Documentos anexados</small>${docs}</div>`;document.getElementById("modalBackdrop").classList.add("show");
+  }
+
+  function closeModal(){
+    document.getElementById("modalBackdrop").classList.remove("show");
+    document.body.classList.remove("modal-open");
+  }
+
+  document.getElementById("modalBackdrop").addEventListener("click", e => {
+    if(e.target.id === "modalBackdrop") closeModal();
+  });
+
+  async function deleteStudent(id){
+    const s = students.find(x => x.id === id);
+    if(!s) return;
+    if(!confirm(`Deseja excluir o cadastro de ${s.nome}?`)) return;
+
+    const {error} = await supabaseClient.from("alunos").delete().eq("id", id);
+    if(error){
+      console.error(error);
+      showToast("Não foi possível excluir o cadastro.");
+      return;
+    }
+
+    students = students.filter(x => x.id !== id);
+    lessons = lessons.filter(x => String(x.alunoId) !== String(id));
+    closeModal();
+    renderStudents();
+    renderDashboard();
+    renderCalendar();
+    showToast("Cadastro excluído.");
+  }
+
+
+  function pad(n){ return String(n).padStart(2,"0"); }
+
+  function localDateKey(year, month, day){
+    return `${year}-${pad(month+1)}-${pad(day)}`;
+  }
+
+  function formatMonthTitle(date){
+    return date.toLocaleDateString("pt-BR", {month:"long", year:"numeric"});
+  }
+
+  function renderCalendar(){
+    const grid = document.getElementById("calendarGrid");
+    if(!grid) return;
+
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+    document.getElementById("calendarMonth").textContent = formatMonthTitle(calendarDate);
+
+    const weekdays = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+    let output = weekdays.map(d => `<div class="weekday">${d}</div>`).join("");
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const prevDays = new Date(year, month, 0).getDate();
+
+    for(let i = firstDay - 1; i >= 0; i--){
+      const day = prevDays - i;
+      output += `<div class="day muted"><div class="day-number">${day}</div></div>`;
+    }
+
+    const today = new Date();
+    for(let day = 1; day <= daysInMonth; day++){
+      const dateKey = localDateKey(year, month, day);
+      const date = new Date(year, month, day);
+      const isToday =
+        date.toDateString() === today.toDateString();
+
+      const dayLessons = lessons.filter(l => l.date === dateKey);
+      const weekday = date.getDay();
+      const noClass = weekday === 3;
+
+      let events = dayLessons.slice(0,3).map(l => `
+        <div class="lesson" onclick="event.stopPropagation(); viewLesson(${l.id})">
+          <strong>${escapeHtml(l.time || "")}</strong>
+          <span>${escapeHtml(l.student || l.instrumento || "Aula")}</span>
+        </div>
+      `).join("");
+
+      if(dayLessons.length > 3){
+        events += `<div class="no-class">+${dayLessons.length - 3} aula(s)</div>`;
+      } else if(noClass && !dayLessons.length){
+        events = `<div class="no-class">Sem aula</div>`;
+      }
+
+      output += `
+        <div class="day ${isToday ? "today" : ""}" onclick="openLessonModal('${dateKey}')">
+          <div class="day-number">${day}</div>
+          ${events}
+        </div>`;
+    }
+
+    const totalCells = firstDay + daysInMonth;
+    const trailing = (7 - (totalCells % 7)) % 7;
+    for(let day = 1; day <= trailing; day++){
+      output += `<div class="day muted"><div class="day-number">${day}</div></div>`;
+    }
+
+    grid.innerHTML = output;
+    renderLessonsList();
+  }
+
+  function renderLessonsList(){
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+
+    const monthLessons = lessons
+      .filter(l => {
+        const d = new Date(l.date + "T00:00:00");
+        return d.getFullYear() === year && d.getMonth() === month;
+      })
+      .sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time));
+
+    document.getElementById("monthLessonCount").textContent =
+      `${monthLessons.length} aula(s) registrada(s)`;
+
+    const list = document.getElementById("lessonsList");
+    if(!monthLessons.length){
+      list.innerHTML = '<div class="empty">Nenhuma aula registrada neste mês.</div>';
+      return;
+    }
+
+    list.innerHTML = monthLessons.map(l => `
+      <div class="lesson-row">
+        <div>
+          <strong>${formatDate(l.date)} — ${escapeHtml(l.student || "Aula")}</strong>
+          <span>${escapeHtml(l.instrumento || "Instrumento não informado")} • ${escapeHtml(l.professor || "Sem professor")} • ${escapeHtml(l.conteudo || "Sem conteúdo informado")}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <span class="lesson-time">${escapeHtml(l.time || "")}</span>
+          <button class="btn btn-danger btn-sm" onclick="deleteLesson(${l.id})">Excluir</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function changeMonth(amount){
+    calendarDate.setMonth(calendarDate.getMonth() + amount);
+    renderCalendar();
+  }
+
+  function goCurrentMonth(){
+    calendarDate = new Date();
+    calendarDate.setDate(1);
+    renderCalendar();
+  }
+
+  function openLessonModal(dateKey = ""){
+    const selectedDate = dateKey || localDateKey(
+      calendarDate.getFullYear(), calendarDate.getMonth(), new Date().getDate()
+    );
+
+    const modal = document.getElementById("modalBackdrop");
+    document.getElementById("modalTitle").textContent = "Registrar aula";
+
+    document.getElementById("modalBody").innerHTML = `
+      <div class="detail full" style="background:white;padding:0">
+        <div class="form-grid">
+          <div class="field">
+            <label>Data da aula *</label>
+            <input type="date" id="lessonDate" value="${selectedDate}" onchange="updateLessonTimes()">
+          </div>
+          <div class="field">
+            <label>Horário *</label>
+            <select id="lessonTime" required></select>
+          </div>
+          <div class="field">
+            <label>Aluno(a)</label>
+            <select id="lessonStudent">
+              <option value="">Aula geral / turma</option>
+              ${students.map(s => `<option value="${s.id}">${escapeHtml(s.nome)} — ${escapeHtml(s.instrumento || "")}</option>`).join("")}
+            </select>
+          </div>
+          <div class="field">
+            <label>Professor(a)</label>
+            <select id="lessonProfessor">
+              <option value="">Selecione</option>
+              <option>Ronaldo Jr.</option>
+              <option>Francisco Mesquita</option>
+              <option>Ezequias Gomes</option>
+              <option>Isaque Sampaio</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Instrumento</label>
+            <select id="lessonInstrument">
+              <option value="">Selecione</option>
+              <option>Flauta Doce</option>
+              <option>Trompete</option>
+              <option>Trombone</option>
+              <option>Sax Tenor</option>
+              <option>Flauta Transversal</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label>Conteúdo da aula</label>
+            <textarea id="lessonContent" placeholder="Ex.: Escalas, postura, leitura musical..."></textarea>
+          </div>
+          <div class="field full">
+            <label>Observações</label>
+            <textarea id="lessonNotes" placeholder="Observações sobre a aula..."></textarea>
+          </div>
+        </div>
+        <div class="form-actions" style="margin-top:18px">
+          <button type="button" class="btn btn-light" onclick="closeModal()">Cancelar</button>
+          <button type="button" class="btn btn-blue" onclick="saveLesson()">✓ Registrar aula</button>
+        </div>
+      </div>
+    `;
+
+    modal.classList.add("show");
+    document.body.classList.add("modal-open");
+    updateLessonTimes();
+  }
+
+  function updateLessonTimes(){
+    const dateInput = document.getElementById("lessonDate");
+    const select = document.getElementById("lessonTime");
+    if(!dateInput || !select) return;
+
+    const date = new Date(dateInput.value + "T00:00:00");
+    const weekday = date.getDay();
+
+    if(weekday === 3){
+      select.innerHTML = '<option value="">Quarta-feira não possui aula</option>';
+      select.disabled = true;
+      return;
+    }
+
+    if(weekday === 0 || weekday === 6){
+      select.innerHTML = '<option value="">Selecione uma data de aula</option>';
+      select.disabled = true;
+      return;
+    }
+
+    select.disabled = false;
+    select.innerHTML = [13,14,15,16,17].map(h =>
+      `<option value="${pad(h)}:00">${pad(h)}:00</option>`
+    ).join("");
+  }
+
+  async function saveLesson(){
+    const date = document.getElementById("lessonDate").value;
+    const time = document.getElementById("lessonTime").value;
+    const studentId = document.getElementById("lessonStudent").value;
+    const professor = document.getElementById("lessonProfessor").value;
+    const instrumento = document.getElementById("lessonInstrument").value;
+    const conteudo = document.getElementById("lessonContent").value.trim();
+    const observacoes = document.getElementById("lessonNotes").value.trim();
+
+    if(!date || !time){
+      showToast("Escolha uma data e um horário válido.");
+      return;
+    }
+
+    const weekday = new Date(date + "T00:00:00").getDay();
+    if(weekday === 3){
+      showToast("Não há aulas na quarta-feira.");
+      return;
+    }
+    if(weekday === 0 || weekday === 6){
+      showToast("As aulas estão disponíveis de segunda, terça, quinta e sexta.");
+      return;
+    }
+
+    const student = students.find(s => String(s.id) === String(studentId));
+    const button = document.querySelector('#modalBody .btn-blue');
+    if(button){ button.disabled = true; button.textContent = "Salvando..."; }
+
+    const {data: row, error} = await supabaseClient.from("aulas").insert({
+      data_aula: date,
+      horario: time,
+      aluno_id: student ? student.id : null,
+      aluno_nome: student ? student.nome : null,
+      instrumento: instrumento || (student ? student.instrumento : null),
+      professor: professor || (student ? student.professor : null),
+      conteudo: conteudo || null,
+      observacoes: observacoes || null
+    }).select().single();
+
+    if(button){ button.disabled = false; button.textContent = "✓ Registrar aula"; }
+
+    if(error){
+      console.error(error);
+      showToast("Não foi possível registrar a aula.");
+      return;
+    }
+
+    lessons.push(mapLesson(row));
+    closeModal();
+    calendarDate = new Date(date + "T00:00:00");
+    calendarDate.setDate(1);
+    renderCalendar();
+    showToast("Aula registrada com sucesso!");
+  }
+
+  function viewLesson(id){
+    const l = lessons.find(x => x.id === id);
+    if(!l) return;
+
+    document.getElementById("modalTitle").textContent = "Detalhes da aula";
+    document.getElementById("modalBody").innerHTML = `
+      <div class="detail"><small>Data</small><strong>${formatDate(l.date)}</strong></div>
+      <div class="detail"><small>Horário</small><strong>${escapeHtml(l.time)}</strong></div>
+      <div class="detail"><small>Aluno(a)</small><strong>${escapeHtml(l.student || "Aula geral / turma")}</strong></div>
+      <div class="detail"><small>Instrumento</small><strong>${escapeHtml(l.instrumento || "—")}</strong></div>
+      <div class="detail"><small>Professor(a)</small><strong>${escapeHtml(l.professor || "—")}</strong></div>
+      <div class="detail full"><small>Conteúdo da aula</small><strong>${escapeHtml(l.conteudo || "—")}</strong></div>
+      <div class="detail full"><small>Observações</small><strong>${escapeHtml(l.observacoes || "—")}</strong></div>
+      <div class="form-actions" style="grid-column:1/-1">
+        <button class="btn btn-danger" onclick="deleteLesson(${l.id})">Excluir aula</button>
+        <button class="btn btn-light" onclick="closeModal()">Fechar</button>
+      </div>
+    `;
+    document.getElementById("modalBackdrop").classList.add("show");
+  }
+
+  async function deleteLesson(id){
+    const lesson = lessons.find(x => x.id === id);
+    if(!lesson) return;
+
+    if(!confirm(`Excluir a aula de ${lesson.date} às ${lesson.time}?`)) return;
+
+    const {error} = await supabaseClient.from("aulas").delete().eq("id", id);
+    if(error){
+      console.error(error);
+      showToast("Não foi possível excluir a aula.");
+      return;
+    }
+
+    lessons = lessons.filter(x => x.id !== id);
+    closeModal();
+    renderCalendar();
+    showToast("Aula excluída.");
+  }
+
+  function materialNameType(tipo){ return tipo === "Banda Marcial" ? "Banda Marcial" : "Escola"; }
+
+  function renderMaterials(tipo){
+    const isBanda = tipo === "Banda Marcial";
+    const suffix = isBanda ? "Banda" : "Escola";
+    const listEl = document.getElementById("materialList" + suffix);
+    if(!listEl) return;
+    const search = (document.getElementById("materialSearch" + suffix)?.value || "").toLowerCase().trim();
+    const category = document.getElementById("materialCategory" + suffix)?.value || "";
+    const rows = materials.filter(m => materialNameType(m.tipo) === tipo).filter(m => {
+      const hay = [m.nome,m.categoria,m.patrimonio,m.localizacao,m.estado].join(" ").toLowerCase();
+      return (!search || hay.includes(search)) && (!category || m.categoria === category);
+    });
+    const totalQty = rows.reduce((sum,m)=>sum + Number(m.quantidade || 0),0);
+    const damaged = rows.filter(m => m.estado === "Danificado" || m.estado === "Precisa manutenção").length;
+    const summary = document.getElementById("materialSummary" + suffix);
+    summary.innerHTML = `<div class="mini-stat"><span>Itens cadastrados</span><strong>${rows.length}</strong></div><div class="mini-stat"><span>Quantidade total</span><strong>${totalQty}</strong></div><div class="mini-stat"><span>Manutenção / danificados</span><strong>${damaged}</strong></div>`;
+    if(!rows.length){ listEl.innerHTML = `<div class="material-empty">Nenhum material cadastrado nesta área.</div>`; return; }
+    listEl.innerHTML = rows.map(m => `<div class="material-row"><div class="material-main"><strong>${escapeHtml(m.nome)}</strong><span class="material-badge">${escapeHtml(m.categoria || "Outros")}</span><span>${Number(m.quantidade||0)} ${escapeHtml(m.unidade||"unidade(s)")} · ${escapeHtml(m.estado||"Bom")}${m.localizacao ? " · " + escapeHtml(m.localizacao) : ""}${m.patrimonio ? " · Patrimônio: " + escapeHtml(m.patrimonio) : ""}</span></div><div class="material-actions"><button onclick="openMaterialModal('${tipo}', ${m.id})">✏️ Editar</button><button onclick="deleteMaterial(${m.id})">🗑️ Excluir</button></div></div>`).join("");
+  }
+
+  function openMaterialModal(tipo, id=null){
+    const m = id ? materials.find(x => Number(x.id) === Number(id)) : null;
+    document.getElementById("modalTitle").textContent = m ? "Editar material" : "Cadastrar material";
+    document.getElementById("modalBody").innerHTML = `
+      <form id="materialForm" class="material-form" style="grid-column:1/-1">
+        <input type="hidden" id="materialId" value="${m ? m.id : ""}">
+        <input type="hidden" id="materialTipo" value="${escapeHtml(tipo)}">
+        <div class="form-grid">
+          <div class="field full"><label>Nome do material *</label><input id="materialNome" required value="${escapeHtml(m?.nome || "")}" placeholder="Ex.: Trompete, estante, caixa de som"></div>
+          <div class="field"><label>Categoria *</label><select id="materialCategoria" required><option value="">Selecione</option>${["Instrumentos","Equipamentos de áudio","Acessórios","Material pedagógico","Mobiliário","Uniformes","Outros"].map(c=>`<option ${m?.categoria===c?'selected':''}>${c}</option>`).join("")}</select></div>
+          <div class="field"><label>Quantidade *</label><input type="number" min="0" id="materialQuantidade" required value="${m?.quantidade ?? 1}"></div>
+          <div class="field"><label>Unidade</label><input id="materialUnidade" value="${escapeHtml(m?.unidade || "unidade(s)")}" placeholder="unidade(s), par, caixa..."></div>
+          <div class="field"><label>Estado</label><select id="materialEstado"><option ${m?.estado==="Bom"?'selected':''}>Bom</option><option ${m?.estado==="Regular"?'selected':''}>Regular</option><option ${m?.estado==="Precisa manutenção"?'selected':''}>Precisa manutenção</option><option ${m?.estado==="Danificado"?'selected':''}>Danificado</option></select></div>
+          <div class="field"><label>Localização</label><input id="materialLocalizacao" value="${escapeHtml(m?.localizacao || "")}" placeholder="Sala, almoxarifado..."></div>
+          <div class="field"><label>Patrimônio / Tombo</label><input id="materialPatrimonio" value="${escapeHtml(m?.patrimonio || "")}"></div>
+          <div class="field"><label>Data de aquisição</label><input type="date" id="materialData" value="${m?.data_aquisicao || ""}"></div>
+          <div class="field full"><label>Observações</label><textarea id="materialObservacoes" placeholder="Informações sobre o material...">${escapeHtml(m?.observacoes || "")}</textarea></div>
+        </div>
+        <div class="form-actions"><button type="button" class="btn btn-light" onclick="closeModal()">Cancelar</button><button type="submit" class="btn btn-blue">${m ? "✓ Salvar alterações" : "✓ Cadastrar material"}</button></div>
+      </form>`;
+    document.getElementById("modalBackdrop").classList.add("show");
+    document.body.classList.add("modal-open");
+    document.getElementById("materialForm").addEventListener("submit", saveMaterial);
+  }
+
+  async function saveMaterial(e){
+    e.preventDefault();
+    const id = document.getElementById("materialId").value;
+    const tipo = document.getElementById("materialTipo").value;
+    const payload = {tipo, nome:document.getElementById("materialNome").value.trim(), categoria:document.getElementById("materialCategoria").value, quantidade:Number(document.getElementById("materialQuantidade").value||0), unidade:document.getElementById("materialUnidade").value.trim() || "unidade(s)", estado:document.getElementById("materialEstado").value, localizacao:document.getElementById("materialLocalizacao").value.trim() || null, patrimonio:document.getElementById("materialPatrimonio").value.trim() || null, data_aquisicao:document.getElementById("materialData").value || null, observacoes:document.getElementById("materialObservacoes").value.trim() || null};
+    const button = e.target.querySelector('button[type="submit"]'); button.disabled=true; button.textContent="Salvando...";
+    let result;
+    if(id) result = await supabaseClient.from("materiais").update(payload).eq("id", id).select().single();
+    else result = await supabaseClient.from("materiais").insert(payload).select().single();
+    button.disabled=false;
+    if(result.error){ console.error(result.error); showToast("Não foi possível salvar o material."); return; }
+    if(id) materials = materials.map(m => Number(m.id)===Number(id) ? result.data : m); else materials.unshift(result.data);
+    closeModal(); renderMaterials(tipo); showToast(id ? "Material atualizado!" : "Material cadastrado!");
+  }
+
+  async function deleteMaterial(id){
+    if(!confirm("Excluir este material?")) return;
+    const {error} = await supabaseClient.from("materiais").delete().eq("id", id);
+    if(error){ console.error(error); showToast("Não foi possível excluir o material."); return; }
+    const removed = materials.find(m=>Number(m.id)===Number(id));
+    materials = materials.filter(m=>Number(m.id)!==Number(id));
+    if(removed) renderMaterials(materialNameType(removed.tipo));
+    showToast("Material excluído.");
+  }
+
+  function showToast(message){
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
+  }
+
+  function escapeHtml(value){
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[char]));
+  }
+
+  initialize();
+</script>
+</body>
+</html>
